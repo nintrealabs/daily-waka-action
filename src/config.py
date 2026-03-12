@@ -4,8 +4,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-README_PATH = BASE_DIR / "README.md"
+_DEFAULT_BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(os.getenv("APP_BASE_DIR", str(_DEFAULT_BASE_DIR))).resolve()
 
 load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR / ".env.example", override=False)
@@ -16,6 +16,9 @@ def _resolve_path(value: str) -> Path:
 	if path.is_absolute():
 		return path
 	return BASE_DIR / path
+
+
+README_PATH = _resolve_path(os.getenv("README_PATH", "README.md"))
 
 
 def _sanitize_env_value(value: str) -> str:
